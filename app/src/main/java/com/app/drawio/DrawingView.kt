@@ -20,9 +20,17 @@ class DrawingView(context:Context,attr:AttributeSet):View(context,attr) {
     private var color = Color.BLACK
     private var canvas:Canvas? = null
     private var mPath = ArrayList<CustomPath>()
+    private var mUndoPath = ArrayList<CustomPath>()
 
     init {
         setupDrawing()
+    }
+
+    fun onClickUndo(){
+        if(mPath.size > 0){
+            mUndoPath.add(mPath.removeAt(mPath.size -1))
+            invalidate()
+        }
     }
     private fun setupDrawing(){
         mDrawPaint = Paint()
@@ -90,6 +98,11 @@ class DrawingView(context:Context,attr:AttributeSet):View(context,attr) {
     fun setSizeforBrush(newSize:Float){
         mBrushSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,newSize,resources.displayMetrics)
         mDrawPaint!!.strokeWidth = mBrushSize
+    }
+
+    fun setColor(newColor:String){
+        color= Color.parseColor(newColor)
+        mDrawPaint!!.color=color
     }
 
     internal inner class CustomPath(var color:Int , var BrushThickness:Float):Path(){
